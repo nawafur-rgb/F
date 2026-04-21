@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>منصة الأستاذ نواف البدراني - إدارة الطلاب</title>
+  <title>منصة الأستاذ نواف البدراني</title>
   <style>
     *{box-sizing:border-box}
     :root{
@@ -21,6 +21,8 @@
       --blue:#3b82f6;
       --blue-d:#2563eb;
       --gold:#f59e0b;
+      --gold-d:#d97706;
+      --gray:#64748b;
       --input:#f3f4f6;
       --inputText:#111827;
       --shadow:0 12px 30px rgba(0,0,0,.22);
@@ -56,10 +58,37 @@
     }
 
     .wrap{
-      max-width:1250px;
+      max-width:1280px;
       margin:28px auto;
       padding:18px;
     }
+
+    .tabs{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:20px;
+    }
+
+    .tab-btn{
+      border:none;
+      border-radius:14px;
+      padding:14px 18px;
+      font-size:15px;
+      cursor:pointer;
+      color:#fff;
+      transition:.18s;
+      font-weight:700;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .tab-btn.active{
+      background:var(--blue);
+    }
+
+    .page{display:none}
+    .page.active{display:block}
 
     .grid{
       display:grid;
@@ -80,10 +109,7 @@
       font-size:24px;
     }
 
-    .field{
-      margin-bottom:14px;
-    }
-
+    .field{margin-bottom:14px}
     .label{
       display:block;
       margin-bottom:8px;
@@ -132,11 +158,14 @@
     .btn-add:hover{background:var(--green-d)}
     .btn-save{background:var(--blue)}
     .btn-save:hover{background:var(--blue-d)}
-    .btn-cancel{background:#64748b}
+    .btn-cancel{background:var(--gray)}
     .btn-clear{background:var(--red)}
     .btn-clear:hover{background:var(--red-d)}
     .btn-delete{background:var(--red)}
     .btn-edit{background:var(--gold); color:#111827}
+    .btn-present{background:var(--green)}
+    .btn-late{background:var(--gold); color:#111827}
+    .btn-absent{background:var(--red)}
 
     .topbar{
       display:flex;
@@ -179,13 +208,13 @@
       margin-bottom:18px;
     }
 
-    .student-list{
+    .student-list,.att-list{
       display:flex;
       flex-direction:column;
       gap:12px;
     }
 
-    .student{
+    .student,.att-item{
       display:grid;
       grid-template-columns:1fr auto;
       gap:14px;
@@ -222,6 +251,34 @@
       border-radius:12px;
     }
 
+    .badge{
+      display:inline-block;
+      padding:5px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+    }
+
+    .badge-grade{
+      background:rgba(59,130,246,.15);
+      color:#93c5fd;
+    }
+
+    .badge-present{
+      background:rgba(34,197,94,.15);
+      color:#86efac;
+    }
+
+    .badge-late{
+      background:rgba(245,158,11,.18);
+      color:#fcd34d;
+    }
+
+    .badge-absent{
+      background:rgba(239,68,68,.16);
+      color:#fca5a5;
+    }
+
     .empty{
       padding:20px;
       text-align:center;
@@ -239,14 +296,22 @@
       line-height:1.8;
     }
 
-    .badge{
-      display:inline-block;
-      padding:5px 10px;
-      border-radius:999px;
-      background:rgba(34,197,94,.15);
-      color:#86efac;
-      font-size:12px;
-      font-weight:700;
+    .att-top-filters{
+      display:grid;
+      grid-template-columns:1fr 1fr 180px;
+      gap:12px;
+      margin-bottom:18px;
+    }
+
+    .att-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .small{
+      font-size:13px;
+      color:var(--muted);
     }
 
     @media (max-width: 980px){
@@ -256,9 +321,9 @@
     @media (max-width: 700px){
       .title{font-size:23px}
       .sub{font-size:14px}
-      .searchbar{grid-template-columns:1fr}
+      .searchbar,.att-top-filters{grid-template-columns:1fr}
       .row{grid-template-columns:1fr}
-      .student{grid-template-columns:1fr}
+      .student,.att-item{grid-template-columns:1fr}
       .student-name{font-size:19px}
       .topbar{align-items:flex-start}
     }
@@ -267,24 +332,87 @@
 <body>
   <header>
     <div class="title">منصة الأستاذ نواف البدراني</div>
-    <div class="sub">المرحلة الأولى — إدارة الطلاب</div>
+    <div class="sub">إدارة الطلاب والحضور والغياب</div>
   </header>
 
   <div class="wrap">
-    <div class="grid">
-      <section class="card">
-        <h2 id="formTitle">إضافة طالب جديد</h2>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showPage('studentsPage', this)">إدارة الطلاب</button>
+      <button class="tab-btn" onclick="showPage('attendancePage', this)">الحضور والغياب</button>
+    </div>
 
-        <div class="field">
-          <label class="label">اسم الطالب</label>
-          <input id="studentName" type="text" placeholder="مثال: أحمد الغامدي">
-        </div>
+    <!-- صفحة الطلاب -->
+    <section id="studentsPage" class="page active">
+      <div class="grid">
+        <section class="card">
+          <h2 id="formTitle">إضافة طالب جديد</h2>
 
-        <div class="row">
           <div class="field">
-            <label class="label">الصف</label>
-            <select id="studentGrade">
-              <option value="">اختر الصف</option>
+            <label class="label">اسم الطالب</label>
+            <input id="studentName" type="text" placeholder="مثال: أحمد الغامدي">
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label class="label">الصف</label>
+              <select id="studentGrade">
+                <option value="">اختر الصف</option>
+                <option>الأول متوسط</option>
+                <option>الثاني متوسط</option>
+                <option>الثالث متوسط</option>
+                <option>الأول ثانوي</option>
+                <option>الثاني ثانوي</option>
+                <option>الثالث ثانوي</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label class="label">الشعبة</label>
+              <select id="studentClass">
+                <option value="">اختر الشعبة</option>
+                <option>أ</option>
+                <option>ب</option>
+                <option>ج</option>
+                <option>د</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">رقم ولي الأمر</label>
+            <input id="parentPhone" type="tel" placeholder="05xxxxxxxx">
+          </div>
+
+          <div class="btns">
+            <button id="mainBtn" class="btn-add" onclick="submitStudent()">إضافة الطالب</button>
+            <button id="cancelBtn" class="btn-cancel" onclick="cancelEdit()" style="display:none;">إلغاء التعديل</button>
+          </div>
+
+          <div class="hint">
+            البيانات محفوظة تلقائيًا داخل المتصفح.<br>
+            تم إضافة صفحة حضور وغياب بنفس التصميم.
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="topbar">
+            <h2 style="margin:0;">قائمة الطلاب</h2>
+            <div class="stats">
+              <div class="stat">
+                <div class="stat-num" id="totalStudents">0</div>
+                <div class="stat-label">إجمالي الطلاب</div>
+              </div>
+              <div class="stat">
+                <div class="stat-num" id="filteredStudents">0</div>
+                <div class="stat-label">النتائج المعروضة</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="searchbar">
+            <input id="searchInput" type="text" placeholder="ابحث باسم الطالب..." oninput="renderStudents()">
+            <select id="filterGrade" onchange="renderStudents()">
+              <option value="">كل الصفوف</option>
               <option>الأول متوسط</option>
               <option>الثاني متوسط</option>
               <option>الثالث متوسط</option>
@@ -292,54 +420,47 @@
               <option>الثاني ثانوي</option>
               <option>الثالث ثانوي</option>
             </select>
-          </div>
-
-          <div class="field">
-            <label class="label">الشعبة</label>
-            <select id="studentClass">
-              <option value="">اختر الشعبة</option>
+            <select id="filterClass" onchange="renderStudents()">
+              <option value="">كل الشعب</option>
               <option>أ</option>
               <option>ب</option>
               <option>ج</option>
               <option>د</option>
             </select>
           </div>
-        </div>
 
-        <div class="field">
-          <label class="label">رقم ولي الأمر</label>
-          <input id="parentPhone" type="tel" placeholder="05xxxxxxxx">
-        </div>
+          <div class="btns" style="margin-bottom:18px;">
+            <button class="btn-clear" onclick="clearAllStudents()">حذف جميع الطلاب</button>
+          </div>
 
-        <div class="btns">
-          <button id="mainBtn" class="btn-add" onclick="submitStudent()">إضافة الطالب</button>
-          <button id="cancelBtn" class="btn-cancel" onclick="cancelEdit()" style="display:none;">إلغاء التعديل</button>
-        </div>
+          <div id="studentList" class="student-list"></div>
+        </section>
+      </div>
+    </section>
 
-        <div class="hint">
-          البيانات محفوظة تلقائيًا داخل المتصفح.<br>
-          في المرحلة القادمة نضيف الحضور والغياب والتقارير.
-        </div>
-      </section>
-
+    <!-- صفحة الحضور -->
+    <section id="attendancePage" class="page">
       <section class="card">
         <div class="topbar">
-          <h2 style="margin:0;">قائمة الطلاب</h2>
+          <h2 style="margin:0;">الحضور والغياب</h2>
           <div class="stats">
             <div class="stat">
-              <div class="stat-num" id="totalStudents">0</div>
-              <div class="stat-label">إجمالي الطلاب</div>
+              <div class="stat-num" id="presentCount">0</div>
+              <div class="stat-label">حاضر</div>
             </div>
             <div class="stat">
-              <div class="stat-num" id="filteredStudents">0</div>
-              <div class="stat-label">النتائج المعروضة</div>
+              <div class="stat-num" id="lateCount">0</div>
+              <div class="stat-label">متأخر</div>
+            </div>
+            <div class="stat">
+              <div class="stat-num" id="absentCount">0</div>
+              <div class="stat-label">غائب</div>
             </div>
           </div>
         </div>
 
-        <div class="searchbar">
-          <input id="searchInput" type="text" placeholder="ابحث باسم الطالب..." oninput="renderStudents()">
-          <select id="filterGrade" onchange="renderStudents()">
+        <div class="att-top-filters">
+          <select id="attFilterGrade" onchange="renderAttendance()">
             <option value="">كل الصفوف</option>
             <option>الأول متوسط</option>
             <option>الثاني متوسط</option>
@@ -348,30 +469,58 @@
             <option>الثاني ثانوي</option>
             <option>الثالث ثانوي</option>
           </select>
-          <select id="filterClass" onchange="renderStudents()">
+
+          <select id="attFilterClass" onchange="renderAttendance()">
             <option value="">كل الشعب</option>
             <option>أ</option>
             <option>ب</option>
             <option>ج</option>
             <option>د</option>
           </select>
+
+          <input id="attDate" type="date" onchange="renderAttendance()">
         </div>
 
-        <div class="btns" style="margin-bottom:18px;">
-          <button class="btn-clear" onclick="clearAllStudents()">حذف جميع الطلاب</button>
-        </div>
-
-        <div id="studentList" class="student-list"></div>
+        <div class="small" style="margin-bottom:16px;">اختر حالة كل طالب: حاضر أو متأخر أو غائب</div>
+        <div id="attendanceList" class="att-list"></div>
       </section>
-    </div>
+    </section>
   </div>
 
   <script>
     let students = JSON.parse(localStorage.getItem("teacher_platform_students") || "[]");
+    let attendance = JSON.parse(localStorage.getItem("teacher_platform_attendance") || "{}");
     let editingId = null;
+
+    function todayStr(){
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth()+1).padStart(2,'0');
+      const day = String(d.getDate()).padStart(2,'0');
+      return `${y}-${m}-${day}`;
+    }
+
+    document.getElementById("attDate").value = todayStr();
+
+    function showPage(pageId, btn){
+      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.getElementById(pageId).classList.add("active");
+      btn.classList.add("active");
+
+      if(pageId === "attendancePage"){
+        renderAttendance();
+      } else {
+        renderStudents();
+      }
+    }
 
     function saveStudents(){
       localStorage.setItem("teacher_platform_students", JSON.stringify(students));
+    }
+
+    function saveAttendance(){
+      localStorage.setItem("teacher_platform_attendance", JSON.stringify(attendance));
     }
 
     function generateId(){
@@ -388,29 +537,14 @@
       const section = document.getElementById("studentClass").value;
       const phone = document.getElementById("parentPhone").value.trim();
 
-      if(!name){
-        alert("اكتب اسم الطالب");
-        return;
-      }
-      if(!grade){
-        alert("اختر الصف");
-        return;
-      }
-      if(!section){
-        alert("اختر الشعبة");
-        return;
-      }
+      if(!name){ alert("اكتب اسم الطالب"); return; }
+      if(!grade){ alert("اختر الصف"); return; }
+      if(!section){ alert("اختر الشعبة"); return; }
 
       if(editingId){
         const index = students.findIndex(s => s.id === editingId);
         if(index !== -1){
-          students[index] = {
-            ...students[index],
-            name,
-            grade,
-            section,
-            phone
-          };
+          students[index] = { ...students[index], name, grade, section, phone };
         }
       } else {
         students.unshift({
@@ -426,6 +560,7 @@
       saveStudents();
       resetForm();
       renderStudents();
+      renderAttendance();
     }
 
     function editStudent(id){
@@ -452,9 +587,18 @@
 
       if(confirm("هل تريد حذف الطالب: " + student.name + " ؟")){
         students = students.filter(s => s.id !== id);
+
+        Object.keys(attendance).forEach(date => {
+          if(attendance[date] && attendance[date][id]){
+            delete attendance[date][id];
+          }
+        });
+
         saveStudents();
+        saveAttendance();
         if(editingId === id) resetForm();
         renderStudents();
+        renderAttendance();
       }
     }
 
@@ -462,9 +606,12 @@
       if(!students.length) return;
       if(confirm("هل تريد حذف جميع الطلاب؟")){
         students = [];
+        attendance = {};
         saveStudents();
+        saveAttendance();
         resetForm();
         renderStudents();
+        renderAttendance();
       }
     }
 
@@ -511,7 +658,7 @@
           <div>
             <div class="student-name">${student.name}</div>
             <div class="meta">
-              <span class="badge">${student.grade}</span>
+              <span class="badge badge-grade">${student.grade}</span>
               <span>الشعبة: ${student.section}</span>
               <span>ولي الأمر: ${student.phone || "غير مضاف"}</span>
             </div>
@@ -524,6 +671,78 @@
       `).join("");
     }
 
+    function getAttendanceStatus(studentId, date){
+      if(!attendance[date]) return "";
+      return attendance[date][studentId] || "";
+    }
+
+    function setAttendance(studentId, status){
+      const date = document.getElementById("attDate").value || todayStr();
+      if(!attendance[date]) attendance[date] = {};
+      attendance[date][studentId] = status;
+      saveAttendance();
+      renderAttendance();
+    }
+
+    function statusBadge(status){
+      if(status === "present") return `<span class="badge badge-present">حاضر</span>`;
+      if(status === "late") return `<span class="badge badge-late">متأخر</span>`;
+      if(status === "absent") return `<span class="badge badge-absent">غائب</span>`;
+      return `<span class="badge" style="background:rgba(255,255,255,.08);color:#cbd5e1;">غير محدد</span>`;
+    }
+
+    function renderAttendance(){
+      const list = document.getElementById("attendanceList");
+      const gradeFilter = document.getElementById("attFilterGrade").value;
+      const classFilter = document.getElementById("attFilterClass").value;
+      const date = document.getElementById("attDate").value || todayStr();
+
+      const filtered = students.filter(student => {
+        const matchGrade = !gradeFilter || student.grade === gradeFilter;
+        const matchClass = !classFilter || student.section === classFilter;
+        return matchGrade && matchClass;
+      });
+
+      let present = 0, late = 0, absent = 0;
+
+      filtered.forEach(student => {
+        const status = getAttendanceStatus(student.id, date);
+        if(status === "present") present++;
+        else if(status === "late") late++;
+        else if(status === "absent") absent++;
+      });
+
+      document.getElementById("presentCount").textContent = present;
+      document.getElementById("lateCount").textContent = late;
+      document.getElementById("absentCount").textContent = absent;
+
+      if(!filtered.length){
+        list.innerHTML = `<div class="empty">لا يوجد طلاب في هذا الصف أو الشعبة</div>`;
+        return;
+      }
+
+      list.innerHTML = filtered.map(student => {
+        const status = getAttendanceStatus(student.id, date);
+        return `
+          <div class="att-item">
+            <div>
+              <div class="student-name">${student.name}</div>
+              <div class="meta">
+                <span class="badge badge-grade">${student.grade}</span>
+                <span>الشعبة: ${student.section}</span>
+                <span>${statusBadge(status)}</span>
+              </div>
+            </div>
+            <div class="att-actions">
+              <button class="btn-present" onclick="setAttendance(${student.id}, 'present')">حاضر</button>
+              <button class="btn-late" onclick="setAttendance(${student.id}, 'late')">متأخر</button>
+              <button class="btn-absent" onclick="setAttendance(${student.id}, 'absent')">غائب</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
     document.getElementById("studentName").addEventListener("keydown", function(e){
       if(e.key === "Enter") submitStudent();
     });
@@ -533,6 +752,7 @@
     });
 
     renderStudents();
+    renderAttendance();
   </script>
 </body>
 </html>
