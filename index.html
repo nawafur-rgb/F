@@ -3,756 +3,257 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>منصة الأستاذ نواف البدراني</title>
+  <title>منصة الأستاذ نواف البدراني - مدرسة الراجحية</title>
   <style>
-    *{box-sizing:border-box}
-    :root{
-      --bg1:#081225;
-      --bg2:#1b2d4a;
-      --card:rgba(7,18,39,.88);
-      --card2:rgba(255,255,255,.05);
-      --text:#ffffff;
-      --muted:#cbd5e1;
-      --line:rgba(255,255,255,.08);
-      --green:#22c55e;
-      --green-d:#16a34a;
-      --red:#ef4444;
-      --red-d:#dc2626;
-      --blue:#3b82f6;
-      --blue-d:#2563eb;
-      --gold:#f59e0b;
-      --gold-d:#d97706;
-      --gray:#64748b;
-      --input:#f3f4f6;
-      --inputText:#111827;
-      --shadow:0 12px 30px rgba(0,0,0,.22);
-      --radius:22px;
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Tahoma, Arial, sans-serif;
+      background: linear-gradient(135deg, #081225, #1b2d4a);
+      color: #fff;
+      min-height: 100vh;
     }
 
-    body{
-      margin:0;
-      font-family:Tahoma, Arial, sans-serif;
-      background:linear-gradient(135deg,var(--bg1),var(--bg2));
-      color:var(--text);
-      min-height:100vh;
+    header {
+      background: rgba(0,0,0,.35);
+      backdrop-filter: blur(8px);
+      padding: 24px 16px;
+      text-align: center;
+      font-size: 32px;
+      font-weight: 700;
+      box-shadow: 0 4px 20px rgba(0,0,0,.25);
     }
 
-    header{
-      background:rgba(0,0,0,.35);
-      backdrop-filter:blur(8px);
-      padding:24px 16px;
-      text-align:center;
-      box-shadow:0 4px 20px rgba(0,0,0,.22);
+    .wrap {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 20px;
     }
 
-    .title{
-      font-size:32px;
-      font-weight:700;
-      margin:0;
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
     }
 
-    .sub{
-      margin-top:8px;
-      color:var(--muted);
-      font-size:16px;
+    .card {
+      background: rgba(7, 18, 39, 0.88);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.2);
+      border: 1px solid rgba(255,255,255,.06);
     }
 
-    .wrap{
-      max-width:1280px;
-      margin:28px auto;
-      padding:18px;
+    h2 {
+      margin: 0 0 20px;
+      font-size: 26px;
     }
 
-    .tabs{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-bottom:20px;
+    .row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
     }
 
-    .tab-btn{
-      border:none;
-      border-radius:14px;
-      padding:14px 18px;
-      font-size:15px;
-      cursor:pointer;
-      color:#fff;
-      transition:.18s;
-      font-weight:700;
-      background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.08);
+    input {
+      flex: 1;
+      min-width: 220px;
+      padding: 16px;
+      border: none;
+      border-radius: 14px;
+      font-size: 18px;
+      outline: none;
+      background: #f3f4f6;
+      color: #111827;
     }
 
-    .tab-btn.active{
-      background:var(--blue);
+    button {
+      border: none;
+      border-radius: 14px;
+      padding: 14px 18px;
+      font-size: 17px;
+      cursor: pointer;
+      color: white;
+      transition: .2s;
     }
 
-    .page{display:none}
-    .page.active{display:block}
+    button:hover { transform: translateY(-1px); }
 
-    .grid{
-      display:grid;
-      grid-template-columns:380px 1fr;
-      gap:20px;
+    .btn-add { background: #22c55e; }
+    .btn-add:hover { background: #16a34a; }
+
+    .btn-delete { background: #ef4444; }
+    .btn-delete:hover { background: #dc2626; }
+
+    .student-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 12px;
     }
 
-    .card{
-      background:var(--card);
-      border-radius:var(--radius);
-      padding:22px;
-      box-shadow:var(--shadow);
-      border:1px solid var(--line);
+    .student {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.06);
     }
 
-    h2{
-      margin:0 0 18px;
-      font-size:24px;
+    .student-name {
+      font-size: 20px;
+      font-weight: 600;
+      word-break: break-word;
     }
 
-    .field{margin-bottom:14px}
-    .label{
-      display:block;
-      margin-bottom:8px;
-      color:var(--muted);
-      font-size:14px;
-      font-weight:700;
+    .empty {
+      opacity: .8;
+      font-size: 18px;
+      padding: 8px 0;
     }
 
-    input, select{
-      width:100%;
-      padding:15px 14px;
-      border:none;
-      outline:none;
-      border-radius:14px;
-      background:var(--input);
-      color:var(--inputText);
-      font-size:16px;
+    .top-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
     }
 
-    .row{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
+    .count {
+      font-size: 18px;
+      color: #cbd5e1;
     }
 
-    .btns{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:10px;
-    }
-
-    button{
-      border:none;
-      border-radius:14px;
-      padding:14px 16px;
-      font-size:15px;
-      cursor:pointer;
-      color:#fff;
-      transition:.18s;
-      font-weight:700;
-    }
-
-    button:hover{transform:translateY(-1px)}
-    .btn-add{background:var(--green)}
-    .btn-add:hover{background:var(--green-d)}
-    .btn-save{background:var(--blue)}
-    .btn-save:hover{background:var(--blue-d)}
-    .btn-cancel{background:var(--gray)}
-    .btn-clear{background:var(--red)}
-    .btn-clear:hover{background:var(--red-d)}
-    .btn-delete{background:var(--red)}
-    .btn-edit{background:var(--gold); color:#111827}
-    .btn-present{background:var(--green)}
-    .btn-late{background:var(--gold); color:#111827}
-    .btn-absent{background:var(--red)}
-
-    .topbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-bottom:18px;
-    }
-
-    .stats{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-
-    .stat{
-      background:var(--card2);
-      border:1px solid var(--line);
-      padding:12px 14px;
-      border-radius:16px;
-      min-width:140px;
-    }
-
-    .stat-num{
-      font-size:24px;
-      font-weight:700;
-    }
-
-    .stat-label{
-      color:var(--muted);
-      font-size:13px;
-      margin-top:4px;
-    }
-
-    .searchbar{
-      display:grid;
-      grid-template-columns:1.5fr 1fr 1fr;
-      gap:12px;
-      margin-bottom:18px;
-    }
-
-    .student-list,.att-list{
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
-
-    .student,.att-item{
-      display:grid;
-      grid-template-columns:1fr auto;
-      gap:14px;
-      padding:16px;
-      border-radius:18px;
-      background:var(--card2);
-      border:1px solid var(--line);
-    }
-
-    .student-name{
-      font-size:22px;
-      font-weight:700;
-      margin-bottom:6px;
-    }
-
-    .meta{
-      color:var(--muted);
-      font-size:14px;
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px 14px;
-    }
-
-    .actions{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      flex-wrap:wrap;
-    }
-
-    .actions button{
-      padding:10px 14px;
-      font-size:14px;
-      border-radius:12px;
-    }
-
-    .badge{
-      display:inline-block;
-      padding:5px 10px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:700;
-    }
-
-    .badge-grade{
-      background:rgba(59,130,246,.15);
-      color:#93c5fd;
-    }
-
-    .badge-present{
-      background:rgba(34,197,94,.15);
-      color:#86efac;
-    }
-
-    .badge-late{
-      background:rgba(245,158,11,.18);
-      color:#fcd34d;
-    }
-
-    .badge-absent{
-      background:rgba(239,68,68,.16);
-      color:#fca5a5;
-    }
-
-    .empty{
-      padding:20px;
-      text-align:center;
-      color:var(--muted);
-      font-size:18px;
-      background:var(--card2);
-      border-radius:18px;
-      border:1px dashed var(--line);
-    }
-
-    .hint{
-      margin-top:14px;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.8;
-    }
-
-    .att-top-filters{
-      display:grid;
-      grid-template-columns:1fr 1fr 180px;
-      gap:12px;
-      margin-bottom:18px;
-    }
-
-    .att-actions{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-    }
-
-    .small{
-      font-size:13px;
-      color:var(--muted);
-    }
-
-    @media (max-width: 980px){
-      .grid{grid-template-columns:1fr}
-    }
-
-    @media (max-width: 700px){
-      .title{font-size:23px}
-      .sub{font-size:14px}
-      .searchbar,.att-top-filters{grid-template-columns:1fr}
-      .row{grid-template-columns:1fr}
-      .student,.att-item{grid-template-columns:1fr}
-      .student-name{font-size:19px}
-      .topbar{align-items:flex-start}
+    @media (max-width: 700px) {
+      header { font-size: 22px; }
+      h2 { font-size: 22px; }
+      .student-name { font-size: 18px; }
+      button, input { font-size: 16px; }
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="title">منصة الأستاذ نواف البدراني</div>
-    <div class="sub">إدارة الطلاب والحضور والغياب</div>
-  </header>
+
+  <header>منصة الأستاذ نواف البدراني - مدرسة الراجحية</header>
 
   <div class="wrap">
-    <div class="tabs">
-      <button class="tab-btn active" onclick="showPage('studentsPage', this)">إدارة الطلاب</button>
-      <button class="tab-btn" onclick="showPage('attendancePage', this)">الحضور والغياب</button>
-    </div>
-
-    <!-- صفحة الطلاب -->
-    <section id="studentsPage" class="page active">
-      <div class="grid">
-        <section class="card">
-          <h2 id="formTitle">إضافة طالب جديد</h2>
-
-          <div class="field">
-            <label class="label">اسم الطالب</label>
-            <input id="studentName" type="text" placeholder="مثال: أحمد الغامدي">
-          </div>
-
-          <div class="row">
-            <div class="field">
-              <label class="label">الصف</label>
-              <select id="studentGrade">
-                <option value="">اختر الصف</option>
-                <option>الأول متوسط</option>
-                <option>الثاني متوسط</option>
-                <option>الثالث متوسط</option>
-                <option>الأول ثانوي</option>
-                <option>الثاني ثانوي</option>
-                <option>الثالث ثانوي</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label class="label">الشعبة</label>
-              <select id="studentClass">
-                <option value="">اختر الشعبة</option>
-                <option>أ</option>
-                <option>ب</option>
-                <option>ج</option>
-                <option>د</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="label">رقم ولي الأمر</label>
-            <input id="parentPhone" type="tel" placeholder="05xxxxxxxx">
-          </div>
-
-          <div class="btns">
-            <button id="mainBtn" class="btn-add" onclick="submitStudent()">إضافة الطالب</button>
-            <button id="cancelBtn" class="btn-cancel" onclick="cancelEdit()" style="display:none;">إلغاء التعديل</button>
-          </div>
-
-          <div class="hint">
-            البيانات محفوظة تلقائيًا داخل المتصفح.<br>
-            تم إضافة صفحة حضور وغياب بنفس التصميم.
-          </div>
-        </section>
-
-        <section class="card">
-          <div class="topbar">
-            <h2 style="margin:0;">قائمة الطلاب</h2>
-            <div class="stats">
-              <div class="stat">
-                <div class="stat-num" id="totalStudents">0</div>
-                <div class="stat-label">إجمالي الطلاب</div>
-              </div>
-              <div class="stat">
-                <div class="stat-num" id="filteredStudents">0</div>
-                <div class="stat-label">النتائج المعروضة</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="searchbar">
-            <input id="searchInput" type="text" placeholder="ابحث باسم الطالب..." oninput="renderStudents()">
-            <select id="filterGrade" onchange="renderStudents()">
-              <option value="">كل الصفوف</option>
-              <option>الأول متوسط</option>
-              <option>الثاني متوسط</option>
-              <option>الثالث متوسط</option>
-              <option>الأول ثانوي</option>
-              <option>الثاني ثانوي</option>
-              <option>الثالث ثانوي</option>
-            </select>
-            <select id="filterClass" onchange="renderStudents()">
-              <option value="">كل الشعب</option>
-              <option>أ</option>
-              <option>ب</option>
-              <option>ج</option>
-              <option>د</option>
-            </select>
-          </div>
-
-          <div class="btns" style="margin-bottom:18px;">
-            <button class="btn-clear" onclick="clearAllStudents()">حذف جميع الطلاب</button>
-          </div>
-
-          <div id="studentList" class="student-list"></div>
-        </section>
-      </div>
-    </section>
-
-    <!-- صفحة الحضور -->
-    <section id="attendancePage" class="page">
+    <div class="grid">
       <section class="card">
-        <div class="topbar">
-          <h2 style="margin:0;">الحضور والغياب</h2>
-          <div class="stats">
-            <div class="stat">
-              <div class="stat-num" id="presentCount">0</div>
-              <div class="stat-label">حاضر</div>
-            </div>
-            <div class="stat">
-              <div class="stat-num" id="lateCount">0</div>
-              <div class="stat-label">متأخر</div>
-            </div>
-            <div class="stat">
-              <div class="stat-num" id="absentCount">0</div>
-              <div class="stat-label">غائب</div>
-            </div>
-          </div>
+        <h2>إضافة طالب</h2>
+        <div class="row">
+          <input id="studentName" type="text" placeholder="اسم الطالب" />
+          <button class="btn-add" onclick="addStudent()">إضافة</button>
         </div>
-
-        <div class="att-top-filters">
-          <select id="attFilterGrade" onchange="renderAttendance()">
-            <option value="">كل الصفوف</option>
-            <option>الأول متوسط</option>
-            <option>الثاني متوسط</option>
-            <option>الثالث متوسط</option>
-            <option>الأول ثانوي</option>
-            <option>الثاني ثانوي</option>
-            <option>الثالث ثانوي</option>
-          </select>
-
-          <select id="attFilterClass" onchange="renderAttendance()">
-            <option value="">كل الشعب</option>
-            <option>أ</option>
-            <option>ب</option>
-            <option>ج</option>
-            <option>د</option>
-          </select>
-
-          <input id="attDate" type="date" onchange="renderAttendance()">
-        </div>
-
-        <div class="small" style="margin-bottom:16px;">اختر حالة كل طالب: حاضر أو متأخر أو غائب</div>
-        <div id="attendanceList" class="att-list"></div>
       </section>
-    </section>
+
+      <section class="card">
+        <div class="top-actions">
+          <h2 style="margin:0;">الطلاب</h2>
+          <div class="count" id="studentCount">عدد الطلاب: 0</div>
+        </div>
+
+        <div id="studentList" class="student-list"></div>
+
+        <div style="margin-top:18px;">
+          <button class="btn-delete" onclick="clearAll()">حذف الكل</button>
+        </div>
+      </section>
+    </div>
   </div>
 
   <script>
-    let students = JSON.parse(localStorage.getItem("teacher_platform_students") || "[]");
-    let attendance = JSON.parse(localStorage.getItem("teacher_platform_attendance") || "{}");
-    let editingId = null;
+    let students = JSON.parse(localStorage.getItem("students") || "[]");
+    let counter = students.length ? Math.max(...students.map(s => s.id)) + 1 : 1;
 
-    function todayStr(){
-      const d = new Date();
-      const y = d.getFullYear();
-      const m = String(d.getMonth()+1).padStart(2,'0');
-      const day = String(d.getDate()).padStart(2,'0');
-      return `${y}-${m}-${day}`;
+    function saveStudents() {
+      localStorage.setItem("students", JSON.stringify(students));
     }
 
-    document.getElementById("attDate").value = todayStr();
+    function updateCount() {
+      document.getElementById("studentCount").textContent = "عدد الطلاب: " + students.length;
+    }
 
-    function showPage(pageId, btn){
-      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-      document.getElementById(pageId).classList.add("active");
-      btn.classList.add("active");
+    function renderStudents() {
+      const list = document.getElementById("studentList");
+      list.innerHTML = "";
 
-      if(pageId === "attendancePage"){
-        renderAttendance();
-      } else {
-        renderStudents();
+      if (students.length === 0) {
+        list.innerHTML = '<div class="empty">لا يوجد طلاب حالياً</div>';
+        updateCount();
+        return;
       }
+
+      students.forEach(student => {
+        const item = document.createElement("div");
+        item.className = "student";
+
+        const name = document.createElement("div");
+        name.className = "student-name";
+        name.textContent = student.name;
+
+        const actions = document.createElement("div");
+        const delBtn = document.createElement("button");
+        delBtn.className = "btn-delete";
+        delBtn.textContent = "حذف";
+        delBtn.onclick = () => removeStudent(student.id);
+
+        actions.appendChild(delBtn);
+        item.appendChild(name);
+        item.appendChild(actions);
+        list.appendChild(item);
+      });
+
+      updateCount();
     }
 
-    function saveStudents(){
-      localStorage.setItem("teacher_platform_students", JSON.stringify(students));
-    }
+    function addStudent() {
+      const input = document.getElementById("studentName");
+      const name = input.value.trim();
 
-    function saveAttendance(){
-      localStorage.setItem("teacher_platform_attendance", JSON.stringify(attendance));
-    }
-
-    function generateId(){
-      return Date.now() + Math.floor(Math.random() * 1000);
-    }
-
-    function normalizeText(text){
-      return (text || "").toString().trim().toLowerCase();
-    }
-
-    function submitStudent(){
-      const name = document.getElementById("studentName").value.trim();
-      const grade = document.getElementById("studentGrade").value;
-      const section = document.getElementById("studentClass").value;
-      const phone = document.getElementById("parentPhone").value.trim();
-
-      if(!name){ alert("اكتب اسم الطالب"); return; }
-      if(!grade){ alert("اختر الصف"); return; }
-      if(!section){ alert("اختر الشعبة"); return; }
-
-      if(editingId){
-        const index = students.findIndex(s => s.id === editingId);
-        if(index !== -1){
-          students[index] = { ...students[index], name, grade, section, phone };
-        }
-      } else {
-        students.unshift({
-          id: generateId(),
-          name,
-          grade,
-          section,
-          phone,
-          createdAt: new Date().toLocaleString("ar-SA")
-        });
+      if (!name) {
+        alert("اكتب اسم الطالب أولاً");
+        input.focus();
+        return;
       }
+
+      students.push({
+        id: counter++,
+        name: name
+      });
 
       saveStudents();
-      resetForm();
       renderStudents();
-      renderAttendance();
+      input.value = "";
+      input.focus();
     }
 
-    function editStudent(id){
-      const student = students.find(s => s.id === id);
-      if(!student) return;
-
-      editingId = id;
-      document.getElementById("studentName").value = student.name;
-      document.getElementById("studentGrade").value = student.grade;
-      document.getElementById("studentClass").value = student.section;
-      document.getElementById("parentPhone").value = student.phone || "";
-
-      document.getElementById("formTitle").textContent = "تعديل بيانات الطالب";
-      document.getElementById("mainBtn").textContent = "حفظ التعديلات";
-      document.getElementById("mainBtn").className = "btn-save";
-      document.getElementById("cancelBtn").style.display = "inline-block";
-
-      window.scrollTo({ top: 0, behavior: "smooth" });
+    function removeStudent(id) {
+      students = students.filter(student => student.id !== id);
+      saveStudents();
+      renderStudents();
     }
 
-    function deleteStudent(id){
-      const student = students.find(s => s.id === id);
-      if(!student) return;
+    function clearAll() {
+      if (!students.length) return;
 
-      if(confirm("هل تريد حذف الطالب: " + student.name + " ؟")){
-        students = students.filter(s => s.id !== id);
-
-        Object.keys(attendance).forEach(date => {
-          if(attendance[date] && attendance[date][id]){
-            delete attendance[date][id];
-          }
-        });
-
-        saveStudents();
-        saveAttendance();
-        if(editingId === id) resetForm();
-        renderStudents();
-        renderAttendance();
-      }
-    }
-
-    function clearAllStudents(){
-      if(!students.length) return;
-      if(confirm("هل تريد حذف جميع الطلاب؟")){
+      if (confirm("هل أنت متأكد من حذف جميع الطلاب؟")) {
         students = [];
-        attendance = {};
-        saveStudents();
-        saveAttendance();
-        resetForm();
+        localStorage.removeItem("students");
         renderStudents();
-        renderAttendance();
       }
     }
 
-    function cancelEdit(){
-      resetForm();
-    }
-
-    function resetForm(){
-      editingId = null;
-      document.getElementById("studentName").value = "";
-      document.getElementById("studentGrade").value = "";
-      document.getElementById("studentClass").value = "";
-      document.getElementById("parentPhone").value = "";
-
-      document.getElementById("formTitle").textContent = "إضافة طالب جديد";
-      document.getElementById("mainBtn").textContent = "إضافة الطالب";
-      document.getElementById("mainBtn").className = "btn-add";
-      document.getElementById("cancelBtn").style.display = "none";
-    }
-
-    function renderStudents(){
-      const list = document.getElementById("studentList");
-      const search = normalizeText(document.getElementById("searchInput").value);
-      const gradeFilter = document.getElementById("filterGrade").value;
-      const classFilter = document.getElementById("filterClass").value;
-
-      const filtered = students.filter(student => {
-        const matchName = normalizeText(student.name).includes(search);
-        const matchGrade = !gradeFilter || student.grade === gradeFilter;
-        const matchClass = !classFilter || student.section === classFilter;
-        return matchName && matchGrade && matchClass;
-      });
-
-      document.getElementById("totalStudents").textContent = students.length;
-      document.getElementById("filteredStudents").textContent = filtered.length;
-
-      if(!filtered.length){
-        list.innerHTML = `<div class="empty">لا توجد نتائج مطابقة</div>`;
-        return;
-      }
-
-      list.innerHTML = filtered.map(student => `
-        <div class="student">
-          <div>
-            <div class="student-name">${student.name}</div>
-            <div class="meta">
-              <span class="badge badge-grade">${student.grade}</span>
-              <span>الشعبة: ${student.section}</span>
-              <span>ولي الأمر: ${student.phone || "غير مضاف"}</span>
-            </div>
-          </div>
-          <div class="actions">
-            <button class="btn-edit" onclick="editStudent(${student.id})">تعديل</button>
-            <button class="btn-delete" onclick="deleteStudent(${student.id})">حذف</button>
-          </div>
-        </div>
-      `).join("");
-    }
-
-    function getAttendanceStatus(studentId, date){
-      if(!attendance[date]) return "";
-      return attendance[date][studentId] || "";
-    }
-
-    function setAttendance(studentId, status){
-      const date = document.getElementById("attDate").value || todayStr();
-      if(!attendance[date]) attendance[date] = {};
-      attendance[date][studentId] = status;
-      saveAttendance();
-      renderAttendance();
-    }
-
-    function statusBadge(status){
-      if(status === "present") return `<span class="badge badge-present">حاضر</span>`;
-      if(status === "late") return `<span class="badge badge-late">متأخر</span>`;
-      if(status === "absent") return `<span class="badge badge-absent">غائب</span>`;
-      return `<span class="badge" style="background:rgba(255,255,255,.08);color:#cbd5e1;">غير محدد</span>`;
-    }
-
-    function renderAttendance(){
-      const list = document.getElementById("attendanceList");
-      const gradeFilter = document.getElementById("attFilterGrade").value;
-      const classFilter = document.getElementById("attFilterClass").value;
-      const date = document.getElementById("attDate").value || todayStr();
-
-      const filtered = students.filter(student => {
-        const matchGrade = !gradeFilter || student.grade === gradeFilter;
-        const matchClass = !classFilter || student.section === classFilter;
-        return matchGrade && matchClass;
-      });
-
-      let present = 0, late = 0, absent = 0;
-
-      filtered.forEach(student => {
-        const status = getAttendanceStatus(student.id, date);
-        if(status === "present") present++;
-        else if(status === "late") late++;
-        else if(status === "absent") absent++;
-      });
-
-      document.getElementById("presentCount").textContent = present;
-      document.getElementById("lateCount").textContent = late;
-      document.getElementById("absentCount").textContent = absent;
-
-      if(!filtered.length){
-        list.innerHTML = `<div class="empty">لا يوجد طلاب في هذا الصف أو الشعبة</div>`;
-        return;
-      }
-
-      list.innerHTML = filtered.map(student => {
-        const status = getAttendanceStatus(student.id, date);
-        return `
-          <div class="att-item">
-            <div>
-              <div class="student-name">${student.name}</div>
-              <div class="meta">
-                <span class="badge badge-grade">${student.grade}</span>
-                <span>الشعبة: ${student.section}</span>
-                <span>${statusBadge(status)}</span>
-              </div>
-            </div>
-            <div class="att-actions">
-              <button class="btn-present" onclick="setAttendance(${student.id}, 'present')">حاضر</button>
-              <button class="btn-late" onclick="setAttendance(${student.id}, 'late')">متأخر</button>
-              <button class="btn-absent" onclick="setAttendance(${student.id}, 'absent')">غائب</button>
-            </div>
-          </div>
-        `;
-      }).join("");
-    }
-
-    document.getElementById("studentName").addEventListener("keydown", function(e){
-      if(e.key === "Enter") submitStudent();
-    });
-
-    document.getElementById("parentPhone").addEventListener("keydown", function(e){
-      if(e.key === "Enter") submitStudent();
+    document.getElementById("studentName").addEventListener("keydown", function(e) {
+      if (e.key === "Enter") addStudent();
     });
 
     renderStudents();
-    renderAttendance();
   </script>
 </body>
 </html>
